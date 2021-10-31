@@ -1,11 +1,12 @@
 import packet
 
+DOMAIN = 'www.emoryward.com'
+IP = '142.250.191.46'
+
 
 def main():
-    domain = 'www.testing.com'
-    IP = '142.250.191.46'
     p = packet.Packet()
-    p.create_random_packet(domain)
+    p.create_random_packet(DOMAIN)
     p.show_packet()
 
     hex_stream = p.hex_stream
