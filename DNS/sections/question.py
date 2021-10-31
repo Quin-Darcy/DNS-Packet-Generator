@@ -74,9 +74,7 @@ class Question:
         self.bin_question = ''.join(self.bin_question)
 
     def set_hex_question(self) -> None:
-        print('BIN_QUESTION: ', self.bin_question)
         self.hex_question = util.bin_to_hex(self.bin_question)
-        print('HEX_QUESTION: ', self.hex_question)
 
     def show_question(self) -> None:
         print('{:>8}'.format(8 * ' ' + 'QUESTION:'))
