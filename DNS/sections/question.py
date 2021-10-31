@@ -16,11 +16,14 @@ util = pu.Util()
 
 
 class Question:
-    def __init__(self, domain) -> None:
+    def __init__(self, domain="www.emoryward.com") -> None:
         self.domain = domain
         self.sections = dict()
         self.bin_question = []
         self.hex_question = []
+        self.sec_num = SEC_NUM
+        self.sec_names = SEC_NAMES
+        self.sec_lens = SEC_LENS
 
     def create_question(self) -> None:
         self.set_qname()
@@ -71,7 +74,9 @@ class Question:
         self.bin_question = ''.join(self.bin_question)
 
     def set_hex_question(self) -> None:
+        print('BIN_QUESTION: ', self.bin_question)
         self.hex_question = util.bin_to_hex(self.bin_question)
+        print('HEX_QUESTION: ', self.hex_question)
 
     def show_question(self) -> None:
         print('{:>8}'.format(8 * ' ' + 'QUESTION:'))
