@@ -6,18 +6,30 @@ util = pu.Util()
 
 
 class Packet:
-    def __init__(self, p_type=0, domain='www.emoryward.com') -> None:
-        self.header = header.Header(p_type)
-        self.question = question.Question(domain)
+    def __init__(self) -> None:
+        self.header = None
+        self.question = None
         self.answer = None
-        self.authority = None
-        self.additional = None
         self.hex_stream = ''
 
-    def create_packet(self) -> None:
+    def create_random_packet(self, domain) -> None:
+        self.header = header.Header()
+        self.question = question.Question(domain)
         self.header.create_header()
         self.question.create_question()
         self.get_hex_stream()
+
+    def create_response_from_stream(self, in_stream, ip) -> None:
+        self.ip = ip
+        self.hex_stream = in_stream
+        bin_stream = util.hex_to_bin(in_stream)
+        bin_head = bin_stream[:96]
+        bin_qstn = bin_stream[96:]
+
+        self.header = util.make_header_from_stream(bin_head)
+        self.question = util.make_question_from_stream(bin_qstn)
+
+        self.make_response()
 
     def get_hex_stream(self) -> None:
         self.hex_stream = self.header.hex_header + self.question.hex_question

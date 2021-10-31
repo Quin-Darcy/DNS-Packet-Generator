@@ -1,3 +1,6 @@
+from .. import *
+
+
 class Util:
     @staticmethod
     def get_split_str(in_str) -> list:
@@ -14,6 +17,51 @@ class Util:
     @staticmethod
     def bin_to_hex(bin_str) -> str:
         return '%0*x' % ((len(bin_str) + 3) // 4, int(bin_str, 2))
+
+    @staticmethod
+    def hex_to_bin(hex_str) -> str:
+        return bin(int('1'+hex_str, 16))[3:]
+
+    @staticmethod
+    def make_header_from_stream(head_str):
+        temp_head = header.Header()
+        current_bit = 0
+        for i in range(temp_head.sec_num):
+            key = temp_head.sec_names[i]
+            temp_sec = head_str[current_bit:current_bit+temp_head.sec_lens[i]]
+            current_bit += temp_head.sec_lens[i]
+            temp_head.sections[key] = ''.join(temp_sec)
+
+        temp_head.sections["QR"] = '1'
+        temp_head.sections["TC"] = '0'
+        temp_head.sections["RA"] = '1'
+        temp_head.sections["ANCOUNT"] = '0000000000000001'
+
+        temp_head.set_bin_header()
+        temp_head.set_hex_header()
+
+        return temp_head
+
+    def make_question_from_stream(self, qstn_str):
+        temp_qstn = question.Question()
+        hex_head = self.bin_to_hex(qstn_str)
+        null_byte = False
+        index = 0
+        while not null_byte and index != len(hex_head):
+            if hex_head[index] == '0' and hex_head[index+1] == '0':
+                null_byte = True
+                index += 1
+            else:
+                index += 1
+
+        temp_qstn.sections = {"QNAME": self.hex_to_bin(qstn_str[:index]),
+                              "QTYPE": self.hex_to_bin(qstn_str[index:index + 16]),
+                              "QCLASS": self.hex_to_bin(qstn_str[index + 16:index + 32])}
+
+        temp_qstn.set_bin_question()
+        temp_qstn.hex_question = self.bin_to_hex(qstn_str)
+
+        return temp_qstn
 
     @staticmethod
     def str_to_bin(reg_str) -> str:

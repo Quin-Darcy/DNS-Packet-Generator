@@ -16,12 +16,13 @@ util = pu.Util()
 
 
 class Header:
-    def __init__(self, p_type) -> None:
-        self.p_type = p_type
+    def __init__(self) -> None:
         self.sections = dict()
         self.bin_header = []
         self.hex_header = []
-        SEC_DEFAULT_VALS[1] = self.p_type
+        self.sec_num = SEC_NUM
+        self.sec_names = SEC_NAMES
+        self.sec_lens = SEC_LENS
 
     def create_header(self) -> None:
         self.set_section_vals()
